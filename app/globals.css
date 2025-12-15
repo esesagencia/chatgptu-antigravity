@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer base {
+    :root {
+        /* SUR BRAND - LIGHT MODE (Blue Background as requested) */
+        --background: 231 100% 56%;
+        /* Sur Blue Accent (#1e3fff) */
+        --foreground: 0 0% 100%;
+        /* White text on blue */
+
+        --card: 210 33% 9%;
+        /* Sur Black */
+        --card-foreground: 0 0% 100%;
+
+        --popover: 210 33% 9%;
+        --popover-foreground: 0 0% 100%;
+
+        --primary: 0 0% 100%;
+        /* White */
+        --primary-foreground: 231 100% 56%;
+        /* Blue text */
+
+        --secondary: 212 16% 19%;
+        /* Sur Grey 1 */
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 212 16% 19%;
+        --muted-foreground: 215 14% 65%;
+        /* Sur Grey 3 */
+
+        --accent: 212 16% 19%;
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+
+        --border: 0 0% 100%;
+        /* White borders on blue bg */
+        --input: 212 16% 19%;
+        --ring: 0 0% 100%;
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        /* SUR BRAND - DARK MODE (Dark Grey Background) */
+        --background: 215 16% 19%;
+        /* Sur Grey 1 (#282f37) */
+        --foreground: 0 0% 100%;
+        /* White */
+
+        --card: 210 33% 9%;
+        /* Sur Black (#101820) */
+        --card-foreground: 0 0% 100%;
+
+        --popover: 210 33% 9%;
+        --popover-foreground: 0 0% 100%;
+
+        --primary: 231 100% 56%;
+        /* Sur Blue Accent for primary actions */
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 210 33% 9%;
+        /* Sur Black */
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 210 33% 9%;
+        --muted-foreground: 220 2% 89%;
+        /* Sur Grey 4 */
+
+        --accent: 231 100% 56%;
+        /* Blue accent */
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+
+        --border: 212 16% 19%;
+        --input: 212 16% 19%;
+        --ring: 231 100% 56%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+.skeleton {
+    * {
+        pointer-events: none !important;
+    }
+
+    *[class^="text-"] {
+        color: transparent;
+        @apply rounded-md bg-foreground/20 select-none animate-pulse;
+    }
+
+    .skeleton-bg {
+        @apply bg-foreground/10;
+    }
+
+    .skeleton-div {
+        @apply bg-foreground/20 animate-pulse;
+    }
+}
