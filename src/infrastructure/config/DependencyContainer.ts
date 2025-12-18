@@ -84,11 +84,19 @@ export class DependencyContainer {
   private async initializeAdapters(): Promise<void> {
     // Get API key from config or environment
     const apiKey = this.config.openaiApiKey || process.env.OPENAI_API_KEY;
+
+    // Initialize AI provider
+    console.log(`[DependencyContainer] Initializing AI Provider...`);
+    if (apiKey) {
+      console.log(`[DependencyContainer] API Key found (Length: ${apiKey.length}, Prefix: ${apiKey.substring(0, 12)}...)`);
+    } else {
+      console.warn(`[DependencyContainer] API Key NOT found in environment!`);
+    }
+
     if (!apiKey) {
       throw new Error('OPENAI_API_KEY not configured');
     }
 
-    // Initialize AI provider
     this.aiProvider = new OpenAIAdapter(apiKey);
 
     // Initialize streaming adapter
