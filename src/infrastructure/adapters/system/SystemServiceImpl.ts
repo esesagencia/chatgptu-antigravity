@@ -28,9 +28,17 @@ export class SystemServiceImpl implements ISystemService {
     async checkApi(): Promise<ComponentHealth> {
         const start = Date.now();
         try {
-            // Simulate API call
-            // In real world: await fetch('https://api.openai.com/v1/models');
-            await new Promise((resolve) => setTimeout(resolve, Math.random() * 100));
+            const apiKey = process.env.OPENAI_API_KEY;
+            if (!apiKey) throw new Error('OPENAI_API_KEY is missing');
+
+            // Real connectivity check to OpenAI
+            const res = await fetch('https://api.openai.com/v1/models', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${apiKey}` }
+            });
+
+            if (!res.ok) throw new Error(`OpenAI API returned ${res.status}`);
+
             return {
                 status: 'healthy',
                 latencyMs: Date.now() - start
@@ -38,9 +46,9 @@ export class SystemServiceImpl implements ISystemService {
         } catch (error) {
             console.error('API check failed', error);
             return {
-                status: 'degraded',
+                status: 'down',
                 latencyMs: Date.now() - start,
-                message: 'API Unreachable'
+                message: (error as Error).message
             };
         }
     }
@@ -48,11 +56,11 @@ export class SystemServiceImpl implements ISystemService {
     async checkInternet(): Promise<ComponentHealth> {
         const start = Date.now();
         try {
-            // Simple connectivity check
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // Increased timeout
 
-            const res = await fetch('https://www.google.com/favicon.ico', {
+            // Check reliable CDN endpoint
+            const res = await fetch('https://1.1.1.1', {
                 method: 'HEAD',
                 signal: controller.signal,
                 cache: 'no-store'
