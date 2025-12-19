@@ -80,6 +80,7 @@ export function useConversationsListQuery(options?: {
       });
 
       // Filter by owned conversations from localStorage
+      // Note: This forces the query to depend on client-side state
       const ownedIds = ConversationStorageService.getOwnedConversations();
       const filtered = conversations.filter(c => ownedIds.includes(c.id));
 
@@ -87,10 +88,10 @@ export function useConversationsListQuery(options?: {
       return ConversationListSchema.parse(filtered);
     },
     enabled,
-    staleTime: 1000 * 60 * 2, // 2 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-    retry: 2,
-    refetchOnMount: true, // Always refetch list on mount
+    // Disable stale time for the list to ensure we always check localStorage
+    staleTime: 0,
+    // Always refetch on mount to ensure we pick up localStorage changes
+    refetchOnMount: 'always',
   });
 }
 
