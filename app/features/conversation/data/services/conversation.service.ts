@@ -48,7 +48,7 @@ export class ConversationService {
 
   private static handleError(error: unknown, operation: string): never {
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<{error?: string}>;
+      const axiosError = error as AxiosError<{ error?: string }>;
       const statusCode = axiosError.response?.status;
       const message = axiosError.response?.data?.error || axiosError.message;
 
@@ -73,12 +73,14 @@ export class ConversationService {
     status?: string;
     limit?: number;
     offset?: number;
+    ids?: string[];
   }): Promise<ConversationListItem[]> {
     try {
       const params = new URLSearchParams();
       if (options?.status) params.append('status', options.status);
       if (options?.limit) params.append('limit', options.limit.toString());
       if (options?.offset) params.append('offset', options.offset.toString());
+      if (options?.ids && options.ids.length > 0) params.append('ids', options.ids.join(','));
 
       const response = await this.axiosInstance.get<{
         conversations: ConversationListItem[];

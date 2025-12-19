@@ -73,19 +73,19 @@ export function useConversationsListQuery(options?: {
   return useQuery({
     queryKey: conversationKeys.list({ status, limit, offset }),
     queryFn: async () => {
+      // Get owned conversations from localStorage to filter on server side
+      const ownedIds = ConversationStorageService.getOwnedConversations();
+
       const conversations = await ConversationService.listConversations({
         status,
         limit,
         offset,
+        ids: ownedIds.length > 0 ? ownedIds : ['empty'], // Pass 'empty' to prevent returning all if array is empty
       });
 
-      // Filter by owned conversations from localStorage
-      // Note: This forces the query to depend on client-side state
-      const ownedIds = ConversationStorageService.getOwnedConversations();
-      const filtered = conversations.filter(c => ownedIds.includes(c.id));
-
+      // No need to filter client-side anymore
       // Validate with schema
-      return ConversationListSchema.parse(filtered);
+      return ConversationListSchema.parse(conversations);
     },
     enabled,
     // Disable stale time for the list to ensure we always check localStorage

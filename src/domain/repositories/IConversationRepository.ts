@@ -26,6 +26,7 @@ export interface IConversationRepository {
     limit?: number;
     offset?: number;
     status?: string;
+    ids?: string[];
   }): Promise<Conversation[]>;
 
   /**

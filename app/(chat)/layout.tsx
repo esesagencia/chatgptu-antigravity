@@ -8,6 +8,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { ConversationSidebar } from "@/app/features/conversation/components/conversation-sidebar";
 import { Navbar } from "@/components/navbar";
 import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { ConversationHandlersContext } from "@/app/features/conversation/hooks/useConversationHandlers";
 
 const queryClient = new QueryClient({
@@ -20,6 +21,7 @@ const queryClient = new QueryClient({
 });
 
 function ChatLayoutContent({ children }: { children: React.ReactNode }) {
+  const router = useRouter(); // Use App Router navigation
   const [handlers, setHandlersState] = useState<{
     startNewConversation: () => string;
     loadConversation: (id: string) => Promise<void>;
@@ -34,11 +36,19 @@ function ChatLayoutContent({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleNewConversation = () => {
-    handlers?.startNewConversation();
+    // Navigate to root to ensure fresh state
+    if (handlers) {
+      handlers.startNewConversation();
+      router.push('/');
+    }
   };
 
   const handleConversationSelect = async (conversationId: string) => {
-    await handlers?.loadConversation(conversationId);
+    // Explicitly update URL if needed, but for now just load
+    // We could add ?c=id to generic URL for deep linking support later
+    if (handlers) {
+      await handlers.loadConversation(conversationId);
+    }
   };
 
   return (

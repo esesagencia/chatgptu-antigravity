@@ -23,12 +23,14 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || undefined;
     const limit = parseInt(searchParams.get('limit') || '100', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
+    const ids = searchParams.get('ids')?.split(',').filter(Boolean); // Parse comma-separated IDs
 
     const repository = container.getConversationRepository();
     const conversations = await repository.findAll({
       status,
       limit: Math.min(limit, 100), // Cap at 100
       offset: Math.max(offset, 0),
+      ids,
     });
 
     // Map to response format

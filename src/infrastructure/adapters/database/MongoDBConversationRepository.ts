@@ -85,6 +85,7 @@ export class MongoDBConversationRepository implements IConversationRepository {
     limit?: number;
     offset?: number;
     status?: string;
+    ids?: string[];
   }): Promise<Conversation[]> {
     try {
       const limit = options?.limit || 100;
@@ -93,6 +94,11 @@ export class MongoDBConversationRepository implements IConversationRepository {
       const filter: any = {};
       if (options?.status) {
         filter.status = options.status;
+      }
+
+      // Filter by specific IDs if provided
+      if (options?.ids && options.ids.length > 0) {
+        filter._id = { $in: options.ids };
       }
 
       // Use projection to exclude messages for list queries (optimization)
