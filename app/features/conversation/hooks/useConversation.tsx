@@ -52,6 +52,9 @@ export function useConversation(options: UseConversationOptions = {}) {
   // Get query client for cache invalidation
   const queryClient = useQueryClient();
 
+  // Sync state with server on mount (restore history)
+
+
   // Log component lifecycle
   useEffect(() => {
     console.log('useConversation hook initialized with conversationId:', storage.conversationId);
@@ -105,7 +108,7 @@ export function useConversation(options: UseConversationOptions = {}) {
       conversationId: storage.conversationId,
     },
     onError: handleError,
-    onFinish: async (message:Message) => {
+    onFinish: async (message: Message) => {
       console.log('[useConversation] Stream finished:', message);
 
       // Update conversation metadata
@@ -131,6 +134,29 @@ export function useConversation(options: UseConversationOptions = {}) {
       }
     },
   });
+
+  // Sync state with server on mount (restore history)
+  useEffect(() => {
+    const syncConversation = async () => {
+      // If we have an ID but no messages, we should try to fetch them
+      // This happens on page refresh when storage has an ID but useChat is fresh
+      if (storage.conversationId && messages.length === 0) {
+        console.log('[useConversation] Restoring history for:', storage.conversationId);
+        try {
+          const conversation = await ConversationService.getConversationById(storage.conversationId);
+          if (conversation && conversation.messages.length > 0) {
+            setMessages(conversation.messages);
+            console.log('[useConversation] History restored:', conversation.messages.length, 'messages');
+          }
+        } catch (error) {
+          console.error('[useConversation] Failed to restore history:', error);
+          // If 404, the user will see an empty chat, effectively a new conversation
+        }
+      }
+    };
+
+    syncConversation();
+  }, [storage.conversationId, setMessages]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Start a new conversation
