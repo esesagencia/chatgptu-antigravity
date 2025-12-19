@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 import { GetSystemStatusUseCase } from '@/application/use-cases/GetSystemStatusUseCase';
 import { SystemServiceImpl } from '@/infrastructure/adapters/system/SystemServiceImpl';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     const systemService = new SystemServiceImpl();
     const getSystemStatus = new GetSystemStatusUseCase(systemService);

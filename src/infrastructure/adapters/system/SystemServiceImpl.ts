@@ -29,6 +29,7 @@ export class SystemServiceImpl implements ISystemService {
         const start = Date.now();
         try {
             const apiKey = process.env.OPENAI_API_KEY;
+            console.log(`[Status] API Check: Key length: ${apiKey?.length || 0}, Prefix: ${apiKey?.substring(0, 12)}...`);
             if (!apiKey) throw new Error('OPENAI_API_KEY is missing');
 
             // Real connectivity check to OpenAI
