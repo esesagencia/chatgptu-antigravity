@@ -4,6 +4,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { ConversationService } from '../../data/services/conversation.service';
+import { ConversationStorageService } from '../../data/services/storage.service';
 import { ConversationListSchema, ConversationSchema } from '../../data/schemas/conversation.schema';
 import { MessagesSchema } from '../../data/schemas/message.schema';
 import type { Message } from 'ai';
@@ -77,8 +78,13 @@ export function useConversationsListQuery(options?: {
         limit,
         offset,
       });
+
+      // Filter by owned conversations from localStorage
+      const ownedIds = ConversationStorageService.getOwnedConversations();
+      const filtered = conversations.filter(c => ownedIds.includes(c.id));
+
       // Validate with schema
-      return ConversationListSchema.parse(conversations);
+      return ConversationListSchema.parse(filtered);
     },
     enabled,
     staleTime: 1000 * 60 * 2, // 2 minutes

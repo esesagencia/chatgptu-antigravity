@@ -3,17 +3,18 @@
 
 /**
  * Storage service for managing conversation data in browser storage
- * Abstracts sessionStorage operations and provides type-safe access
+ * Abstracts localStorage operations and provides type-safe access
  */
 export class ConversationStorageService {
   private static readonly CONVERSATION_ID_KEY = 'conversationId';
   private static readonly CONVERSATION_HISTORY_KEY = 'conversationHistory';
+  private static readonly OWNED_CONVERSATIONS_KEY = 'ownedConversations';
 
   /**
    * Check if we're in a browser environment
    */
   private static isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined';
+    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
   }
 
   /**
@@ -22,17 +23,19 @@ export class ConversationStorageService {
   static generateConversationId(): string {
     const timestamp = Date.now();
     const randomSuffix = Math.random().toString(36).substring(2, 11);
-    return `conv-${timestamp}-${randomSuffix}`;
+    const id = `conv-${timestamp}-${randomSuffix}`;
+    this.addOwnedConversation(id);
+    return id;
   }
 
   /**
-   * Get the stored conversation ID from sessionStorage
+   * Get the stored conversation ID from localStorage
    */
   static getConversationId(): string | null {
     if (!this.isBrowser()) return null;
 
     try {
-      return sessionStorage.getItem(this.CONVERSATION_ID_KEY);
+      return localStorage.getItem(this.CONVERSATION_ID_KEY);
     } catch (error) {
       console.error('Failed to get conversation ID from storage:', error);
       return null;
@@ -40,17 +43,50 @@ export class ConversationStorageService {
   }
 
   /**
-   * Store a conversation ID in sessionStorage
+   * Store a conversation ID in localStorage
    */
   static setConversationId(id: string): boolean {
     if (!this.isBrowser()) return false;
 
     try {
-      sessionStorage.setItem(this.CONVERSATION_ID_KEY, id);
+      localStorage.setItem(this.CONVERSATION_ID_KEY, id);
+      this.addOwnedConversation(id);
       return true;
     } catch (error) {
       console.error('Failed to set conversation ID in storage:', error);
       return false;
+    }
+  }
+
+  /**
+   * Add a conversation ID to the list of owned conversations
+   */
+  static addOwnedConversation(id: string): void {
+    if (!this.isBrowser() || !id) return;
+
+    try {
+      const owned = this.getOwnedConversations();
+      if (!owned.includes(id)) {
+        owned.push(id);
+        localStorage.setItem(this.OWNED_CONVERSATIONS_KEY, JSON.stringify(owned));
+      }
+    } catch (error) {
+      console.error('Failed to add owned conversation:', error);
+    }
+  }
+
+  /**
+   * Get the list of conversation IDs owned by this browser
+   */
+  static getOwnedConversations(): string[] {
+    if (!this.isBrowser()) return [];
+
+    try {
+      const data = localStorage.getItem(this.OWNED_CONVERSATIONS_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Failed to get owned conversations:', error);
+      return [];
     }
   }
 
@@ -79,7 +115,7 @@ export class ConversationStorageService {
     if (!this.isBrowser()) return false;
 
     try {
-      sessionStorage.removeItem(this.CONVERSATION_ID_KEY);
+      localStorage.removeItem(this.CONVERSATION_ID_KEY);
       return true;
     } catch (error) {
       console.error('Failed to clear conversation ID from storage:', error);
@@ -88,14 +124,14 @@ export class ConversationStorageService {
   }
 
   /**
-   * Store conversation metadata (for future use)
+   * Store conversation metadata
    */
   static setConversationMetadata(conversationId: string, metadata: Record<string, any>): boolean {
     if (!this.isBrowser()) return false;
 
     try {
       const key = `${this.CONVERSATION_HISTORY_KEY}_${conversationId}`;
-      sessionStorage.setItem(key, JSON.stringify(metadata));
+      localStorage.setItem(key, JSON.stringify(metadata));
       return true;
     } catch (error) {
       console.error('Failed to store conversation metadata:', error);
@@ -104,14 +140,14 @@ export class ConversationStorageService {
   }
 
   /**
-   * Get conversation metadata (for future use)
+   * Get conversation metadata
    */
   static getConversationMetadata(conversationId: string): Record<string, any> | null {
     if (!this.isBrowser()) return null;
 
     try {
       const key = `${this.CONVERSATION_HISTORY_KEY}_${conversationId}`;
-      const data = sessionStorage.getItem(key);
+      const data = localStorage.getItem(key);
       return data ? JSON.parse(data) : null;
     } catch (error) {
       console.error('Failed to get conversation metadata:', error);
