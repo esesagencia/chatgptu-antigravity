@@ -33,6 +33,15 @@ export function ConversationSidebar({
           <Plus className="h-5 w-5 mr-2" />
           Nueva Conversación
         </Button>
+        <Button
+          variant="ghost"
+          className="w-full mt-2 justify-start text-muted-foreground hover:text-foreground"
+          asChild
+        >
+          <a href="/landing">
+            <span className="mr-2">ℹ️</span> Sobre Somos Sur
+          </a>
+        </Button>
 
         <div className="pt-4 pb-2">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
