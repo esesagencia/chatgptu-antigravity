@@ -132,7 +132,7 @@ export class DependencyContainer {
           throw new Error('MONGODB_URL not configured');
         }
 
-        console.log('[DependencyContainer] Initializing MongoDB repository...');
+        console.log(`[DependencyContainer] Initializing MongoDB repository (DB: ${databaseName})...`);
         const mongoClient = MongoDBClient.getInstance(mongodbUrl, databaseName);
         await mongoClient.connect();
 
@@ -144,11 +144,11 @@ export class DependencyContainer {
         console.log('[DependencyContainer] MongoDB repository initialized successfully');
       } catch (error) {
         console.error('[DependencyContainer] Failed to initialize MongoDB repository:', error);
-        console.warn('[DependencyContainer] Falling back to InMemory repository');
+        console.warn('[DependencyContainer] Falling back to InMemory repository due to connection error');
         this.conversationRepository = new InMemoryConversationRepository();
       }
     } else {
-      console.log('[DependencyContainer] Using InMemory repository');
+      console.log(`[DependencyContainer] Using InMemory repository (Type: ${repositoryType})`);
       this.conversationRepository = new InMemoryConversationRepository();
     }
   }

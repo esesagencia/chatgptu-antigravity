@@ -57,7 +57,9 @@ export class VercelStreamAdapter implements IStreamAdapter {
     return {
       'Content-Type': 'text/plain; charset=utf-8',
       'x-vercel-ai-data-stream': 'v1',
-      'Cache-Control': 'no-cache, no-transform',
+      'Cache-Control': 'no-cache, no-store, must-revalidate, no-transform',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       'Connection': 'keep-alive',
       'X-Content-Type-Options': 'nosniff',
       'X-Accel-Buffering': 'no', // Disable buffering for Nginx/proxies

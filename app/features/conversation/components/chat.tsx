@@ -17,6 +17,7 @@ export interface ChatProps {
   isLoading: boolean;
   isThinking: boolean;
   isEmpty: boolean;
+  isLimitReached: boolean;
 
   // Actions - match MultimodalInput's expected types
   setInput: (value: string) => void;
@@ -58,6 +59,7 @@ export function Chat({
   append,
   messagesContainerRef,
   messagesEndRef,
+  isLimitReached,
 }: ChatProps) {
   return (
     <div className="flex flex-col min-w-0 h-[calc(100dvh-52px)] bg-background">
@@ -95,6 +97,7 @@ export function Chat({
           messages={messages}
           setMessages={setMessages}
           append={append}
+          isLimitReached={isLimitReached}
         />
       </form>
     </div>

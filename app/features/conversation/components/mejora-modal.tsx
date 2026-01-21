@@ -38,31 +38,31 @@ export function MejoraModal({ isOpen, onContinue }: MejoraModalProps) {
                         <div className="p-8 md:p-10 text-center space-y-6">
 
                             <h2 className="text-2xl md:text-3xl font-medium text-white tracking-tight leading-tight">
-                                Has llegado lejos con estas preguntas.
+                                ¿Sabes realmente hacia dónde vas?
                             </h2>
 
                             <div className="space-y-4 text-white/80 text-lg leading-relaxed">
                                 <p>
-                                    Pero quizás el próximo paso no está en este chat, sino en <span className="text-white font-medium">mejorar tu plan</span> de otra forma.
+                                    En <span className="text-white font-medium">Sur</span>, no nos conformamos con darte el camino mas corto.
                                 </p>
                                 <p>
-                                    No el plan que te venden las herramientas.
+                                    Preferimos <span className="text-white font-medium">cuestionar tu dirección</span> para asegurarnos de que el Norte que sigues es realmente el tuyo, y no uno delegado en la inercia de una IA.
                                 </p>
-                                <p className="text-white font-medium text-xl">
-                                    Tu propio plan.
+                                <p className="text-white font-medium text-xl italic">
+                                    Recupera el mando.
                                 </p>
                             </div>
 
                             <div className="pt-4 space-y-3">
                                 {/* Primary Action */}
                                 <button
-                                    onClick={() => window.open('https://somossur.es/mejora-tu-plan', '_blank')}
-                                    className="w-full group relative flex items-center justify-center gap-3 bg-[#1e3fff] hover:bg-[#1e3fff]/90 text-white px-6 py-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02]"
+                                    onClick={() => window.open('https://somossur.es', '_blank')}
+                                    className="w-full group relative flex items-center justify-center gap-3 bg-white text-[#1e3fff] hover:bg-white/90 px-6 py-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02]"
                                 >
                                     <div className="text-left">
-                                        <div className="text-sm font-medium opacity-90">Descubre por qué existe esto</div>
+                                        <div className="text-sm font-medium opacity-90">Descubre nuestra filosofía</div>
                                         <div className="text-lg font-bold flex items-center gap-2">
-                                            somossur.es/mejora-tu-plan
+                                            somossur.es
                                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>

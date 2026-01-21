@@ -22,24 +22,24 @@ import { Textarea } from "@/components/ui/textarea";
 
 const suggestedActions = [
   {
-    title: "¿Cómo encuentro",
-    label: "mi propósito?",
-    action: "¿Cómo encuentro mi propósito?",
+    title: "¿Por qué buscamos",
+    label: "respuestas en la IA?",
+    action: "¿Por qué buscamos respuestas en la IA?",
   },
   {
-    title: "¿Cómo sé si voy",
-    label: "por buen camino?",
-    action: "¿Cómo sé si voy por el camino correcto?",
+    title: "¿Cómo sé si mi",
+    label: "criterio es el mío?",
+    action: "¿Cómo sé si mi criterio es realmente mío?",
   },
   {
-    title: "¿Qué hago cuando",
-    label: "no sé qué hacer?",
-    action: "¿Qué hago cuando no sé qué hacer?",
+    title: "¿Qué significa",
+    label: "perder el norte?",
+    action: "¿Qué significa para vosotros perder el norte?",
   },
   {
-    title: "¿Cómo consigo",
-    label: "trabajo?",
-    action: "¿Cómo consigo trabajo?",
+    title: "¿Cómo dejo de",
+    label: "delegar mi criterio?",
+    action: "¿Cómo puedo empezar a dejar de delegar mi criterio?",
   },
 ];
 
@@ -53,6 +53,7 @@ export function MultimodalInput({
   setMessages,
   append,
   handleSubmit,
+  isLimitReached,
   className,
 }: {
   chatId: string;
@@ -72,6 +73,7 @@ export function MultimodalInput({
     },
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
+  isLimitReached?: boolean;
   className?: string;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -160,11 +162,13 @@ export function MultimodalInput({
 
       <Textarea
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder={isLimitReached ? "Conversación finalizada." : "Send a message..."}
         value={input}
         onChange={handleInput}
+        disabled={isLimitReached}
         className={cn(
           "min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-xl !text-base bg-muted",
+          isLimitReached && "opacity-50 cursor-not-allowed",
           className,
         )}
         rows={3}
@@ -200,7 +204,7 @@ export function MultimodalInput({
             event.preventDefault();
             submitForm();
           }}
-          disabled={input.length === 0}
+          disabled={input.length === 0 || isLimitReached}
         >
           <ArrowUpIcon size={14} />
         </Button>

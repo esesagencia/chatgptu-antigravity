@@ -19,13 +19,14 @@ export const Overview = () => {
         </p>
         <div className="space-y-4 text-foreground/80">
           <p className="text-xl font-medium text-foreground">
-            Probablemente esperabas que te diera una respuesta.
+            Bienvenido a ChatGPTú.
           </p>
           <p>
+            Probablemente esperabas que te diera una respuesta. <br />
             No va a pasar.
           </p>
           <p>
-            Esto es un ejercicio de duda. <br />
+            Estamos aquí para recuperar tu criterio, no para delegarlo. <br />
             Pregunta lo que quieras, pero no esperes certezas.
           </p>
         </div>

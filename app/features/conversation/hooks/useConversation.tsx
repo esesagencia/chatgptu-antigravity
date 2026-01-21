@@ -286,6 +286,12 @@ export function useConversation(options: UseConversationOptions = {}) {
    */
   const isThinking = isLoading && isUserLastMessage;
 
+  /**
+   * Check if the message limit (7 user messages) has been reached
+   */
+  const userMessageCount = messages.filter((m: Message) => m.role === 'user').length;
+  const isLimitReached = userMessageCount >= 7;
+
   return {
     // Conversation state
     conversationId: storage.conversationId,
@@ -294,6 +300,8 @@ export function useConversation(options: UseConversationOptions = {}) {
     isLoading,
     error,
     data,
+    userMessageCount,
+    isLimitReached,
 
     // Derived state
     hasMessages,

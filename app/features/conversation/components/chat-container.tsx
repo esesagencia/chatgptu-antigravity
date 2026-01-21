@@ -9,6 +9,7 @@ import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom';
 import { Chat } from './chat';
 import { useConversationHandlers } from '../hooks/useConversationHandlers';
 import { MejoraModal } from './mejora-modal';
+import type { Message } from 'ai';
 
 /**
  * Container component that manages chat state and business logic
@@ -59,10 +60,10 @@ export function ChatContainer() {
   useEffect(() => {
     if (!conversation.messages) return;
 
-    const userMsgCount = conversation.messages.filter(m => m.role === 'user').length;
+    const userMsgCount = conversation.messages.filter((m: Message) => m.role === 'user').length;
 
-    // Trigger on 6th message, only once
-    if (userMsgCount === 6 && !hasShownModal && !conversation.isLoading) {
+    // Trigger on 4th message, only once
+    if (userMsgCount === 4 && !hasShownModal && !conversation.isLoading) {
       // Small delay to allow bot response to start or finish (user said "2 seconds after bot response")
       // But here we might be checking while bot is thinking.
       // User said: "After bot responds". 
@@ -88,6 +89,7 @@ export function ChatContainer() {
     isLoading: conversation.isLoading,
     isThinking: conversation.isThinking,
     isEmpty: conversation.isEmpty,
+    isLimitReached: conversation.isLimitReached,
 
     setInput: conversation.setInput,
     handleSubmit: conversation.handleSubmit,
