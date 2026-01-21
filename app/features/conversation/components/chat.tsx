@@ -38,6 +38,7 @@ export interface ChatProps {
   // Refs for scrolling
   messagesContainerRef: RefObject<HTMLDivElement>;
   messagesEndRef: RefObject<HTMLDivElement>;
+  readOnly?: boolean;
 }
 
 /**
@@ -60,6 +61,7 @@ export function Chat({
   messagesContainerRef,
   messagesEndRef,
   isLimitReached,
+  readOnly,
 }: ChatProps) {
   return (
     <div className="flex flex-col min-w-0 h-[calc(100dvh-52px)] bg-background">
@@ -98,6 +100,7 @@ export function Chat({
           setMessages={setMessages}
           append={append}
           isLimitReached={isLimitReached}
+          readOnly={readOnly}
         />
       </form>
     </div>

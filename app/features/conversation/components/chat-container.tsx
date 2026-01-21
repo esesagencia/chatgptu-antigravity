@@ -60,10 +60,17 @@ export function ChatContainer() {
   useEffect(() => {
     if (!conversation.messages) return;
 
+    // Check if the current conversation is reflexive
+    // We can check if the ID exists in the reflexiveConversations array
+    // Assuming reflexiveConversations is imported or available via a helper
+    // For now we will import it at the top
+    const isReflexive = conversation.conversationId?.startsWith('reflexive-');
+
     const userMsgCount = conversation.messages.filter((m: Message) => m.role === 'user').length;
 
     // Trigger on 4th message, only once
-    if (userMsgCount === 4 && !hasShownModal && !conversation.isLoading) {
+    // AND ensure it's NOT a reflexive conversation
+    if (userMsgCount === 4 && !hasShownModal && !conversation.isLoading && !isReflexive) {
       // Small delay to allow bot response to start or finish (user said "2 seconds after bot response")
       // But here we might be checking while bot is thinking.
       // User said: "After bot responds". 
@@ -78,7 +85,9 @@ export function ChatContainer() {
         return () => clearTimeout(timer);
       }
     }
-  }, [conversation.messages, conversation.isLoading, hasShownModal]);
+  }, [conversation.messages, conversation.isLoading, hasShownModal, conversation.conversationId]);
+
+  const isReflexive = conversation.conversationId?.startsWith('reflexive-');
 
   // Props for the presentation component
   const chatProps = {
@@ -90,6 +99,7 @@ export function ChatContainer() {
     isThinking: conversation.isThinking,
     isEmpty: conversation.isEmpty,
     isLimitReached: conversation.isLimitReached,
+    readOnly: isReflexive, // Pass readOnly prop if reflexive
 
     setInput: conversation.setInput,
     handleSubmit: conversation.handleSubmit,

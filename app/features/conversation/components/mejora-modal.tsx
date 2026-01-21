@@ -43,13 +43,13 @@ export function MejoraModal({ isOpen, onContinue }: MejoraModalProps) {
 
                             <div className="space-y-4 text-white/80 text-lg leading-relaxed">
                                 <p>
-                                    En <span className="text-white font-medium">Sur</span>, no nos conformamos con darte el camino mas corto.
+                                    En <span className="text-white font-medium">Sur</span>, no nos conformamos con darte el camino correcto.
                                 </p>
                                 <p>
-                                    Preferimos <span className="text-white font-medium">cuestionar tu dirección</span> para asegurarnos de que el Norte que sigues es realmente el tuyo, y no uno delegado en la inercia de una IA.
+                                    Preferimos <span className="text-white font-medium">cuestionar tu dirección</span> para asegurarnos de que el camino que sigues es realmente el tuyo, y no uno delegado en la inercia de una IA.
                                 </p>
                                 <p className="text-white font-medium text-xl italic">
-                                    Recupera el mando.
+                                    Deja de delegar tu criterio, recupera el control.
                                 </p>
                             </div>
 

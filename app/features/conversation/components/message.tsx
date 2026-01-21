@@ -87,9 +87,8 @@ export const MessageRender = ({ message }: { message: Message }) => {
   }
   if (
     message.content &&
-    message.toolInvocations &&
-    message.toolInvocations.length == 0 &&
-    (message.role == "user" || message.role == "assistant")
+    (!message.toolInvocations || message.toolInvocations.length === 0) &&
+    (message.role === "user" || message.role === "assistant")
   ) {
     return (
       <div className="flex flex-col gap-4">

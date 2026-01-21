@@ -1,10 +1,6 @@
-// ABOUTME: Main conversation sidebar component with filtering and new conversation button.
-// ABOUTME: Integrates with React Query hooks and shadcn sidebar components.
-
 "use client";
 
-import { useState } from "react";
-import { Plus } from "lucide-react";
+import { reflexiveConversations } from "@/src/data/reflexive-conversations";
 import {
   Sidebar,
   SidebarContent,
@@ -12,21 +8,8 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Plus, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ConversationList } from "./conversation-list";
-import { useConversationsListQuery } from "../hooks/queries/useConversationQuery";
-import { useDeleteConversationMutation } from "../hooks/mutations/useConversationMutation";
-import { useConversationStorage } from "../hooks/useConversationStorage";
 
 interface ConversationSidebarProps {
   onNewConversation: () => void;
@@ -37,104 +20,54 @@ export function ConversationSidebar({
   onNewConversation,
   onConversationSelect,
 }: ConversationSidebarProps) {
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
-  const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
-
-  const { conversationId: activeConversationId } = useConversationStorage();
-
-  // Query for conversation list
-  const {
-    data: conversations = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useConversationsListQuery({
-    status: statusFilter,
-    limit: 100,
-  });
-
-  // Delete mutation
-  const deleteMutation = useDeleteConversationMutation();
-
-  const handleDelete = () => {
-    if (conversationToDelete) {
-      deleteMutation.mutate(conversationToDelete);
-      setConversationToDelete(null);
-    }
-  };
-
-  const handleNewConversation = () => {
-    onNewConversation();
-  };
-
-  const handleConversationClick = (conversationId: string) => {
-    onConversationSelect(conversationId);
-  };
 
   return (
-    <>
-      <Sidebar>
-        {/* Header with New Chat button */}
-        <SidebarHeader className="p-4">
-          <Button
-            onClick={handleNewConversation}
-            className="w-full"
-            size="lg"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            New Chat
-          </Button>
+    <Sidebar>
+      {/* Header with New Chat button */}
+      <SidebarHeader className="p-4">
+        <Button
+          onClick={onNewConversation}
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          size="lg"
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Nueva Conversación
+        </Button>
 
-          <Separator className="mt-4" />
-        </SidebarHeader>
+        <div className="pt-4 pb-2">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Últimas reflexiones
+          </h3>
+        </div>
+        <Separator className="my-2" />
+      </SidebarHeader>
 
-        {/* Conversation list */}
-        <SidebarContent>
-          <ConversationList
-            conversations={conversations}
-            activeConversationId={activeConversationId || undefined}
-            isLoading={isLoading}
-            isError={isError}
-            error={error}
-            onConversationClick={handleConversationClick}
-            onConversationDelete={setConversationToDelete}
-            onRetry={refetch}
-          />
-        </SidebarContent>
-
-        {/* Footer (optional) */}
-        <SidebarFooter className="p-4">
-          <p className="text-xs text-muted-foreground text-center">
-            {conversations.length} conversation{conversations.length !== 1 ? "s" : ""}
-          </p>
-        </SidebarFooter>
-      </Sidebar>
-
-      {/* Delete confirmation dialog */}
-      <AlertDialog
-        open={conversationToDelete !== null}
-        onOpenChange={(open) => !open && setConversationToDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete conversation?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              conversation and all its messages.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      {/* Static Conversation list */}
+      <SidebarContent className="px-2">
+        <div className="space-y-1">
+          {reflexiveConversations.map((conv) => (
+            <button
+              key={conv.id}
+              onClick={() => onConversationSelect(conv.id)}
+              className="w-full text-left p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group flex flex-col gap-1 border border-transparent hover:border-border/40"
             >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+              <div className="flex items-center gap-2 font-medium text-sm">
+                <MessageSquare className="w-4 h-4 opacity-70" />
+                {conv.title}
+              </div>
+              <div className="text-xs text-muted-foreground pl-6 line-clamp-1 opacity-80 group-hover:opacity-100">
+                {conv.pillar}
+              </div>
+            </button>
+          ))}
+        </div>
+      </SidebarContent>
+
+      <SidebarFooter className="p-4">
+        <p className="text-xs text-muted-foreground text-center opacity-50">
+          v2.2 • SurGPT
+        </p>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

@@ -142,6 +142,18 @@ export function useConversation(options: UseConversationOptions = {}) {
   // Sync state with server on mount (restore history)
   useEffect(() => {
     const syncConversation = async () => {
+      // Check for reflexive conversation first
+      // We import it here or check against a known pattern/data
+      if (storage.conversationId?.startsWith('reflexive-')) {
+        const { reflexiveConversations } = await import('@/src/data/reflexive-conversations');
+        const staticConv = reflexiveConversations.find(c => c.id === storage.conversationId);
+        if (staticConv) {
+          console.log('[useConversation] Restoring static conversation:', staticConv.title);
+          setMessages(staticConv.messages as Message[]);
+          return;
+        }
+      }
+
       // If we have an ID but no messages, we should try to fetch them
       // This happens on page refresh when storage has an ID but useChat is fresh
       if (storage.conversationId && messages.length === 0) {
@@ -160,7 +172,7 @@ export function useConversation(options: UseConversationOptions = {}) {
     };
 
     syncConversation();
-  }, [storage.conversationId, setMessages]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [storage.conversationId, setMessages, messages.length]); // Add messages.length to dependency to ensure it runs if messages are cleared
 
   /**
    * Start a new conversation
@@ -219,6 +231,15 @@ export function useConversation(options: UseConversationOptions = {}) {
       try {
         setIsLoadingConversation(true);
         setLoadError(null);
+
+        // Check if it's a static reflexive conversation
+        if (conversationId.startsWith('reflexive-')) {
+          console.log('Loading static conversation ID:', conversationId);
+          // Just update storage, the effect will handle loading messages
+          storage.loadConversation(conversationId);
+          setIsLoadingConversation(false);
+          return;
+        }
 
         console.log('Loading conversation:', conversationId);
 

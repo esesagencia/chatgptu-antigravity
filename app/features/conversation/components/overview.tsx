@@ -22,12 +22,16 @@ export const Overview = () => {
             Bienvenido a ChatGPTú.
           </p>
           <p>
-            Probablemente esperabas que te diera una respuesta. <br />
-            No va a pasar.
+            Un asistente de IA, pero no como lo conoces.
           </p>
           <p>
-            Estamos aquí para recuperar tu criterio, no para delegarlo. <br />
-            Pregunta lo que quieras, pero no esperes certezas.
+            Estás acostumbrado a que las herramientas te den respuestas.
+          </p>
+          <p>
+            Aquí venimos a hacer preguntas.
+          </p>
+          <p className="font-medium pt-2">
+            ¿Empezamos?
           </p>
         </div>
       </div>
