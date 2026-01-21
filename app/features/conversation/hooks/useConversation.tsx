@@ -107,9 +107,13 @@ export function useConversation(options: UseConversationOptions = {}) {
     body: {
       conversationId: storage.conversationId,
     },
-    onError: handleError,
+    onError: (error: Error) => {
+      console.error('[useConversation] Stream error:', error);
+      toast.error(`Error sending message: ${error.message}`);
+      handleError(error);
+    },
     onFinish: async (message: Message) => {
-      console.log('[useConversation] Stream finished:', message);
+      console.log('[useConversation] Stream finished successfully:', message);
 
       // Update conversation metadata
       storage.setMetadata({
