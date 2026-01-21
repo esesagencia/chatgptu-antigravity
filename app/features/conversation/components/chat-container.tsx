@@ -43,8 +43,24 @@ export function ChatContainer() {
     }
   }, [setHandlers, conversation.startNewConversation, conversation.loadConversation]);
 
+  // Check if reflexive
+  const isReflexive = conversation.conversationId?.startsWith('reflexive-');
+
   // Scroll management
-  const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
+  // Disable auto-scroll for reflexive conversations so users can read from top
+  const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>({
+    enabled: !isReflexive
+  });
+
+  // Force scroll to top for reflexive conversations on load
+  useEffect(() => {
+    if (isReflexive && messagesContainerRef.current) {
+      // Small timeout to ensure content loop has rendered
+      setTimeout(() => {
+        messagesContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+      }, 50);
+    }
+  }, [conversation.conversationId, isReflexive, messagesContainerRef]);
 
   // Modal State
   const [showModal, setShowModal] = useState(false);
@@ -64,8 +80,6 @@ export function ChatContainer() {
     // We can check if the ID exists in the reflexiveConversations array
     // Assuming reflexiveConversations is imported or available via a helper
     // For now we will import it at the top
-    const isReflexive = conversation.conversationId?.startsWith('reflexive-');
-
     const userMsgCount = conversation.messages.filter((m: Message) => m.role === 'user').length;
 
     // Trigger on 4th message, only once
@@ -85,9 +99,9 @@ export function ChatContainer() {
         return () => clearTimeout(timer);
       }
     }
-  }, [conversation.messages, conversation.isLoading, hasShownModal, conversation.conversationId]);
+  }, [conversation.messages, conversation.isLoading, hasShownModal, conversation.conversationId, isReflexive]);
 
-  const isReflexive = conversation.conversationId?.startsWith('reflexive-');
+  // Props for the presentation component
 
   // Props for the presentation component
   const chatProps = {

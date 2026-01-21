@@ -65,7 +65,7 @@ export function ConversationSidebar({
 
       <SidebarFooter className="p-4">
         <p className="text-xs text-muted-foreground text-center opacity-50">
-          v2.2 • SurGPT
+          v2.2 • ChatGPTú
         </p>
       </SidebarFooter>
     </Sidebar>

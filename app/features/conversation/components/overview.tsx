@@ -19,19 +19,10 @@ export const Overview = () => {
         </p>
         <div className="space-y-4 text-foreground/80">
           <p className="text-xl font-medium text-foreground">
-            Bienvenido a ChatGPTú.
+            Te doy la bienvenida a ChatGPTú
           </p>
           <p>
-            Un asistente de IA, pero no como lo conoces.
-          </p>
-          <p>
-            Estás acostumbrado a que las herramientas te den respuestas.
-          </p>
-          <p>
-            Aquí venimos a hacer preguntas.
-          </p>
-          <p className="font-medium pt-2">
-            ¿Empezamos?
+            ¿Con qué reflexionamos hoy?
           </p>
         </div>
       </div>
